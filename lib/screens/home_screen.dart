@@ -1,5 +1,9 @@
+import 'package:daily_dare/screens/achievements_screen.dart';
 import 'package:flutter/material.dart';
 import 'the_rule_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'todays_dare_screen.dart';
+import 'completed_dare_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -37,8 +41,30 @@ class HomeScreen extends StatelessWidget {
                 // Buttons
                 _buildButton(
                   label: "See today's dare!",
-                  onPressed: () {},
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    final todayKey = DateTime.now().toIso8601String().split('T').first;
+                    final completed = prefs.getBool('completed_$todayKey') ?? false;
+
+                    if (completed) {
+                      // pull the exact snapshot you saved
+                      final rem = prefs.getString('remaining_$todayKey') ?? '00:00:00';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CompletedTodaysDareScreen(remainingTime: rem),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TodaysDareScreen()),
+                      );
+                    }
+                  },
                 ),
+
+
                 const SizedBox(height: 16),
                 _buildButton(
                   label: "The RULE",
@@ -53,12 +79,29 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 _buildButton(
                   label: "Achievements",
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AchievementsScreen()),
+                    );
+                  },
                 ),
               ],
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        mini: true,
+        tooltip: 'Reset prefs (debug)',
+        child: const Icon(Icons.refresh),
+        onPressed: () async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Preferences cleared!')),
+          );
+        },
       ),
     );
   }

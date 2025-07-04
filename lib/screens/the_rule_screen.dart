@@ -18,7 +18,7 @@ class TheRuleScreen extends StatelessWidget {
               const Text(
                 'THE RULE',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 28, 
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -31,7 +31,7 @@ class TheRuleScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RuleItem(text: "1. Every day, you’ll get one dare."),
+                    RuleItem(text: "1. Every day at 7AM, you’ll get one dare."),
                     SizedBox(height: 16),
                     RuleItem(text: "2. You have 12 hours to complete it."),
                     SizedBox(height: 16),
